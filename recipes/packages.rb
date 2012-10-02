@@ -56,6 +56,17 @@ when "fedora", "redhat", "centos", "scientific", "amazon"
 when "ubuntu","debian"
   include_recipe "apt"
 
+  if node["package_component"] == "precise-folsom"
+	apt_repository "folsom" do
+		uri "http://ubuntu-cloud.archive.canonical.com/ubuntu"
+		distribution "precise-proposed/folsom"
+		components ["main"]
+		keyserver "keyserver.ubuntu.com"
+		key "5EDB1B62EC4926EA"
+		notifies :run, resources(:execute => "apt-get update"), :delayed
+	end
+  end
+
   apt_repository "osops" do
     uri "http://ppa.launchpad.net/osops-packaging/ppa/ubuntu"
     distribution node["lsb"]["codename"]
